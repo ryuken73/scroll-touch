@@ -21,23 +21,23 @@ const RowFlex = styled.div`
   align-items: center;
   width: 100%;
   justify-content: space-between;
-  margin-top: 5px;
+  margin-bottom: ${props => props.marginBottom || '0px'};
 `
 const ControlContainer = styled.div`
   position: absolute !important;
   top: 30%;
   right: 5%;
   z-index: 10;
-  min-width: 100px;
+  min-width: 120px;
   background: rgba(0, 0, 0, 0.3);
   padding: 10px;
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-top: 2px;
+  padding-bottom: 1px;
   border-radius: 5px;
+  box-sizing: border-box;
 
 `
 const ModeContainer = styled.div`
-  /* visibility: ${props => !props.showControl && 'hidden'}; */
   display: ${props => !props.showControl && 'none'};
 `
 const ChangeModeButton = styled(Button)`
@@ -49,12 +49,12 @@ const ChangeModeButton = styled(Button)`
 `  
 const IconContainer = styled.div`
   border: 1px solid;
-  border-color: ${props => props.isActive ?'rgba(250, 250, 250, 0.8)':'rgba(25, 118, 210, 0.5)'};
   padding: 5px;
   padding-right: 13px;  
   padding-left: 13px;  
   border-radius: 5px;
   box-sizing: border-box;
+  background: ${props => props.isActive ?'rgba(255, 0, 0, 0.3)':'rgba(0, 0, 0, 0.3)'};
   cursor: pointer;
 `
 const FactorContainer = styled.div`
@@ -169,53 +169,65 @@ function App() {
               <ExpandMoreIcon onClick={toggleShowControl} sx={iconStyle}></ExpandMoreIcon>
             )}
           </RowFlex>
-          {/* {showControl && ( */}
-            <ModeContainer showControl={showControl}>
-              <ChangeModeButton
+          <ModeContainer showControl={showControl}>
+            <ChangeModeButton
+              variant="outlined" 
+              sx={{
+                color: "white", 
+                opacity: 0.8, 
+                fontSize: '10px', 
+                width: '100%',
+                marginBottom: '5px',
+                background: 'rgba(0, 0, 0, 0.3)'
+              }}
+              onClick={toggleMode}
+              ref={ref}
+            >
+              {modeText}
+            </ChangeModeButton>
+            <RowFlex marginBottom="5px">
+              {Object.keys(directions[scrollMode]).map(direction => (
+                <IconContainer
+                  key={direction}
+                  id={direction}
+                  isActive={direction === currentDirection}
+                  onClick={changeDirection}
+                >
+                  <DirectionIcon 
+                    direction={direction}
+                    size="tiny"
+                  ></DirectionIcon>
+                </IconContainer>
+              ))}
+            </RowFlex>
+            <FactorContainer>
+              <RowFlex marginBottom="5px">
+                <TinyText>Factor</TinyText>
+                <CommonSelector
+                  options={FACTOR_OPTIONS}
+                  paramName="factor"
+                  value={currentFactor}
+                  disabled={false}
+                  changeValue={changeFactor}
+                  darkStyle
+                ></CommonSelector>
+              </RowFlex>
+            </FactorContainer>
+            <RowFlex>
+              <DebugText 
                 variant="outlined" 
-                sx={{color: "white", opacity: 0.8, fontSize: '10px', width: '100%'}}
-                onClick={toggleMode}
-                ref={ref}
-              >
-                {modeText}
-              </ChangeModeButton>
-              <RowFlex>
-                {Object.keys(directions[scrollMode]).map(direction => (
-                  <IconContainer
-                    key={direction}
-                    id={direction}
-                    isActive={direction === currentDirection}
-                    onClick={changeDirection}
-                  >
-                    <DirectionIcon 
-                      direction={direction}
-                      size="tiny"
-                    ></DirectionIcon>
-                  </IconContainer>
-                ))}
-              </RowFlex>
-              <FactorContainer>
-                <RowFlex>
-                  <TinyText>Factor</TinyText>
-                  <CommonSelector
-                    options={FACTOR_OPTIONS}
-                    paramName="factor"
-                    value={currentFactor}
-                    disabled={false}
-                    changeValue={changeFactor}
-                    darkStyle
-                  ></CommonSelector>
-                </RowFlex>
-              </FactorContainer>
-              <RowFlex>
-                <DebugText 
-                  variant="outlined" 
-                  sx={{color: "white", opacity: 0.8, fontSize: '10px', width: '100%', marginBottom: '10px'}}
-                  onClick={toggleCheckbox}
-                >{debugText}</DebugText>
-              </RowFlex>
-            </ModeContainer>
-          {/* )} */}
+                sx={{
+                  color: "white", 
+                  opacity: 0.8, 
+                  fontSize: '10px', 
+                  width: '100%', 
+                  marginBottom: '10px',
+                  background: `${showDebug? 'rgba(255, 0, 0, 0.3)': 'rgba(0, 0, 0, 0.3)'}`
+                }}
+                onClick={toggleCheckbox}
+              >{debugText}</DebugText>
+            </RowFlex>
+          </ModeContainer>
         </ControlContainer>
       </Draggable>
     </Container>

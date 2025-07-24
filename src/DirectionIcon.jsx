@@ -22,7 +22,7 @@ export default function DirectionIcon(props) {
     justifyContent: 'center',
     alignItems: 'center',
     opacity: `${opacity}`,
-    color: 'grey',
+    color: 'white',
   }
 
   return <Icon id={direction} {...props} sx={iconStyle} />;
