@@ -3,26 +3,29 @@ import styled from 'styled-components';
 import { reverse, throttle } from 'lodash'; // lodash.throttle 사용
 import './VideoPlayer.css';
 
-const ProgressBarHorizontal = styled.div`
+const ProgressBar = styled.div`
   position: absolute;
-  top: 50%;
+  z-index: 10;
+  opacity: 0.7;
+`
+const barDepth = '5px';
+const ProgressBarHorizontal = styled(ProgressBar)`
+  bottom: 0%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  bottom: 0px;
+  transform: translate(-50%, 0%);
   width: ${props => `${100 / props.factor}%`};
-  height: 20px;
+  height: ${barDepth};
   background: ${props => `linear-gradient(
     ${props.reverse ? 'to left':'to right'},
     red ${props.progress}%,
     transparent ${props.progress}%
   )`};
-  border: 3px dashed white;
-  box-sizing: border-box;
-  z-index: 10;
-  opacity: 0.8;
 `
-const ProgressBarVertical = styled(ProgressBarHorizontal)`
-  width: 20px;
+const ProgressBarVertical = styled(ProgressBar)`
+  top: 50%;
+  left: 0%;
+  transform: translate(0%, -50%);
+  width: ${barDepth};
   height: ${props => `${100 / props.factor}%`};
   background: ${props => `linear-gradient(
     ${props.reverse ? 'to top':'to bottom'},
@@ -182,11 +185,13 @@ const VideoPlayer = ({
           style={{
             position: 'absolute',
             top: 10,
-            left: 10,
+            left: 20,
             color: 'white',
-            background: 'rgba(0, 0, 0, 0.5)',
             padding: '5px',
             zIndex: 2,
+            fontSize: '14px',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '10px',
           }}
         >
           Current Time: {currentTime.toFixed(2)}s / {duration.toFixed(2)}s
